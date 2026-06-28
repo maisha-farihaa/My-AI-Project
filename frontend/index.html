@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ask the Sky — AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-sky: #38BDF8;
+    --light-sky: #BAE6FD;
+    --soft-sky: #E0F2FE;
+    --dark-sky: #0284C7;
+    --text-dark: #0F172A;
+    --text-gray: #64748B;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, var(--soft-sky) 0%, #F0F9FF 60%, #FFFFFF 100%);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Signature element: drifting clouds in the background */
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+    opacity: 0.7;
+    filter: blur(1px);
+    z-index: 0;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+  }
+  .cloud-1 {
+    width: 120px; height: 40px; top: 8%; left: -150px;
+    animation: drift 38s linear infinite;
+  }
+  .cloud-1::before { width: 60px; height: 60px; top: -25px; left: 15px; }
+  .cloud-1::after { width: 50px; height: 50px; top: -18px; left: 60px; }
+
+  .cloud-2 {
+    width: 90px; height: 32px; top: 22%; left: -120px;
+    animation: drift 52s linear infinite;
+    animation-delay: -15s;
+  }
+  .cloud-2::before { width: 45px; height: 45px; top: -18px; left: 10px; }
+  .cloud-2::after { width: 38px; height: 38px; top: -14px; left: 45px; }
+
+  .cloud-3 {
+    width: 70px; height: 26px; top: 4%; left: -100px;
+    animation: drift 45s linear infinite;
+    animation-delay: -28s;
+  }
+  .cloud-3::before { width: 36px; height: 36px; top: -14px; left: 8px; }
+  .cloud-3::after { width: 30px; height: 30px; top: -10px; left: 36px; }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 200px)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloud { animation: none; opacity: 0.4; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 640px;
+    padding: 60px 0 40px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dark-sky);
+    background: var(--light-sky);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 38px;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+  }
+
+  h1 span {
+    color: var(--primary-sky);
+  }
+
+  .tagline {
+    font-size: 15px;
+    color: var(--text-gray);
+    margin-top: 10px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(56, 189, 248, 0.15);
+    margin-bottom: 24px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    border: 1.5px solid var(--soft-sky);
+    border-radius: 14px;
+    resize: vertical;
+    outline: none;
+    color: var(--text-dark);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  textarea::placeholder {
+    color: #94A3B8;
+  }
+
+  textarea:focus {
+    border-color: var(--primary-sky);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+  }
+
+  .row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--white);
+    background: var(--primary-sky);
+    border: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button:hover:not(:disabled) {
+    background: var(--dark-sky);
+  }
+
+  button:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  button:disabled {
+    background: var(--light-sky);
+    color: var(--dark-sky);
+    cursor: not-allowed;
+  }
+
+  button:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--dark-sky);
+    outline-offset: 2px;
+  }
+
+  .spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .response-card {
+    background: var(--soft-sky);
+    border-left: 4px solid var(--primary-sky);
+    border-radius: 14px;
+    padding: 20px 22px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    white-space: pre-wrap;
+  }
+
+  .response-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dark-sky);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-gray);
+    font-size: 14px;
+    padding: 10px 0;
+  }
+
+  .error-state {
+    color: #B91C1C;
+    font-size: 14px;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-gray);
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+
+  <div class="container">
+    <header>
+      <span class="eyebrow">Powered by Groq</span>
+      <h1>Ask the <span>Sky</span></h1>
+      <p class="tagline">Type a question below, and let AI find the answer.</p>
+    </header>
+
+    <div class="card">
+      <textarea id="userInput" placeholder="Ask me anything..."></textarea>
+      <div class="row">
+        <button id="askButton">
+          <span id="btnText">Ask AI</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="response-label">Response</span>
+      <div id="responseArea" class="empty-state">
+        Your answer will appear here once you ask something.
+      </div>
+    </div>
+
+    <footer>Built with Express, Groq, and a clear sky.</footer>
+  </div>
+
+<script>
+  // Change this to your deployed backend URL once you deploy it.
+  // While testing locally, this points to your local backend server.
+  const BACKEND_URL = "http://localhost:5000";
+
+  const askButton = document.getElementById('askButton');
+  const btnText = document.getElementById('btnText');
+  const userInput = document.getElementById('userInput');
+  const responseArea = document.getElementById('responseArea');
+
+  async function askAI() {
+    const text = userInput.value.trim();
+
+    if (!text) {
+      responseArea.className = 'error-state';
+      responseArea.textContent = 'Please type a question first.';
+      return;
+    }
+
+    // Set loading state
+    askButton.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> Thinking...';
+    responseArea.className = 'empty-state';
+    responseArea.textContent = 'Waiting for the AI to respond...';
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userText: text })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong.');
+      }
+
+      responseArea.className = '';
+      responseArea.textContent = data.result;
+
+    } catch (err) {
+      responseArea.className = 'error-state';
+      responseArea.textContent = 'Error: ' + err.message + ' (Is your backend server running?)';
+    } finally {
+      askButton.disabled = false;
+      btnText.textContent = 'Ask AI';
+    }
+  }
+
+  askButton.addEventListener('click', askAI);
+
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      askAI();
+    }
+  });
+</script>
+
+</body>
+</html>
