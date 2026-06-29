@@ -1,89 +1,82 @@
-# Ask the Sky — Simple AI Chat App
+# My AI Project — Ask the Sky
 
-A minimal full-stack project that lets you type a question and get an answer from an AI model, powered by [Groq](https://groq.com)'s fast LLM inference.
+A simple full-stack AI web app where users can type a question and get an instant answer powered by Groq's AI models. Built with Express.js on the backend and a clean, sky-blue themed frontend.
 
-## What this project does
+## Live Demo
 
-1. You type a question in the browser.
-2. The frontend sends that question to a backend API.
-3. The backend forwards it to Groq's AI model and gets an answer.
-4. The answer is shown back on the page.
+**[https://my-ai-project-4s137w821-maisha-fariha-s-projects.vercel.app](https://my-ai-project-4s137w821-maisha-fariha-s-projects.vercel.app)**
+
+Try it out — type any question and the AI will respond in real time.
 
 ## Tech Stack
 
-- **Frontend:** Plain HTML, CSS, JavaScript (no framework, no build step)
-- **Backend:** Node.js + Express
-- **AI:** Groq API (Llama 3.3 70B model)
+- **Frontend:** HTML, CSS, JavaScript (deployed on Vercel)
+- **Backend:** Node.js, Express.js (deployed on Railway)
+- **AI Provider:** Groq API (Llama 3.3 70B model)
+
+## Architecture
+
+```
+User (Frontend on Vercel)
+        |
+        v
+Backend (Express on Railway)
+        |
+        v
+Groq AI API
+        |
+        v
+Response returned to user
+```
 
 ## Project Structure
 
 ```
 my-ai-project/
 ├── backend/
-│   ├── server.js        # Express server + Groq API integration
+│   ├── server.js       # Express server with the /api/analyze endpoint
 │   ├── package.json
-│   ├── .env              # Your secret API key (NOT pushed to GitHub)
-│   └── .gitignore
-└── frontend/
-    └── index.html        # Single-file frontend (HTML + CSS + JS)
+│   └── .env             # Environment variables (not committed to GitHub)
+├── frontend/
+│   └── index.html       # Single-page UI that calls the backend API
+└── README.md
 ```
 
-## Running it locally
+## How It Works
 
-### 1. Backend setup
+1. The user types a question into the input box on the frontend.
+2. The frontend sends a POST request to the backend's `/api/analyze` endpoint.
+3. The backend forwards the question to the Groq API.
+4. Groq returns an AI-generated response.
+5. The backend sends that response back to the frontend, where it's displayed to the user.
+
+## Running Locally
+
+### Backend
 
 ```bash
 cd backend
 npm install
-```
-
-Create a `.env` file inside `backend/` with:
-
-```
-GROQ_API_KEY=your_real_groq_api_key_here
-PORT=5000
-```
-
-Get a free API key from [console.groq.com](https://console.groq.com).
-
-Start the server:
-
-```bash
 node server.js
 ```
 
-You should see: `Server is running on port 5000`
+The backend requires a `.env` file inside the `backend` folder with the following variables:
 
-### 2. Frontend setup
-
-Just open `frontend/index.html` directly in your browser — no installation needed.
-
-Make sure the backend is running first, since the frontend calls `http://localhost:5000`.
-
-### 3. Test it
-
-Type a question in the input box and click **Ask AI**. You should see a response appear below.
-
-## API Reference
-
-**POST** `/api/analyze`
-
-Request body:
-```json
-{ "userText": "What is the capital of Bangladesh?" }
+```
+GROQ_API_KEY=your_groq_api_key_here
+PORT=5000
 ```
 
-Response:
-```json
-{ "result": "The capital of Bangladesh is Dhaka." }
-```
+### Frontend
 
-## Deployment Notes
+Open `frontend/index.html` directly in a browser, or serve it with any static file server. Make sure the `BACKEND_URL` constant inside `index.html` points to your running backend (`http://localhost:5000` for local testing, or your deployed backend URL in production).
 
-- The **backend** (Express server) needs a Node.js hosting platform — e.g. Railway, Render, or Vercel (using serverless functions).
-- The **frontend** (`index.html`) can be deployed as a static site on **Vercel** for free.
-- After deploying the backend, update the `BACKEND_URL` constant near the top of the `<script>` tag in `index.html` to point to your live backend URL instead of `http://localhost:5000`.
+## Deployment
 
-## Security Note
+- **Backend** is deployed on [Railway](https://railway.app), with the root directory set to `backend` and environment variables (`GROQ_API_KEY`, `PORT`) configured in the Railway dashboard.
+- **Frontend** is deployed on [Vercel](https://vercel.com), with the root directory set to `frontend`.
 
-Never commit your `.env` file or share your API key publicly. The `.gitignore` file in this project already excludes `.env` and `node_modules/` from being pushed to GitHub.
+## Notes
+
+- The `.env` file is excluded from version control via `.gitignore` to keep the API key secure.
+- CORS is enabled on the backend to allow requests from the deployed frontend.
