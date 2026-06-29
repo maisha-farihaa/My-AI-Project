@@ -132,9 +132,72 @@
     margin-bottom: 24px;
   }
 
+  /* Level selector: the signature element.
+     Each option scales up in size and weight to visually represent
+     growing complexity from child -> teen -> college. */
+  .level-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dark-sky);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .level-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .level-option {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    padding: 10px 12px;
+    border: 1.5px solid var(--soft-sky);
+    border-radius: 12px;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--text-gray);
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+  }
+
+  .level-option .level-icon {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .level-option[data-level="child"] .level-icon { font-size: 16px; }
+  .level-option[data-level="teen"] .level-icon { font-size: 20px; }
+  .level-option[data-level="college"] .level-icon { font-size: 24px; }
+
+  .level-option[data-level="child"] .level-text { font-size: 12px; }
+  .level-option[data-level="teen"] .level-text { font-size: 13px; }
+  .level-option[data-level="college"] .level-text { font-size: 14px; }
+
+  .level-text { font-weight: 600; }
+
+  .level-option:hover {
+    border-color: var(--light-sky);
+    background: var(--soft-sky);
+  }
+
+  .level-option.active {
+    border-color: var(--primary-sky);
+    background: var(--soft-sky);
+    color: var(--dark-sky);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  }
+
   textarea {
     width: 100%;
-    min-height: 110px;
+    min-height: 90px;
     padding: 16px;
     font-family: 'Inter', sans-serif;
     font-size: 15px;
@@ -155,13 +218,35 @@
     box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
   }
 
+  .examples {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-gray);
+  }
+
+  .examples button {
+    background: none;
+    border: none;
+    color: var(--dark-sky);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--light-sky);
+  }
+
+  .examples button:hover {
+    color: var(--primary-sky);
+  }
+
   .row {
     display: flex;
     justify-content: flex-end;
     margin-top: 16px;
   }
 
-  button {
+  button.primary {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 15px;
@@ -177,21 +262,21 @@
     gap: 8px;
   }
 
-  button:hover:not(:disabled) {
+  button.primary:hover:not(:disabled) {
     background: var(--dark-sky);
   }
 
-  button:active:not(:disabled) {
+  button.primary:active:not(:disabled) {
     transform: scale(0.97);
   }
 
-  button:disabled {
+  button.primary:disabled {
     background: var(--light-sky);
     color: var(--dark-sky);
     cursor: not-allowed;
   }
 
-  button:focus-visible, textarea:focus-visible {
+  button:focus-visible, textarea:focus-visible, .level-option:focus-visible {
     outline: 3px solid var(--dark-sky);
     outline-offset: 2px;
   }
@@ -249,6 +334,12 @@
     color: var(--text-gray);
     margin-top: 10px;
   }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 30px; }
+    .level-selector { flex-wrap: wrap; }
+    .level-option { min-width: 80px; }
+  }
 </style>
 </head>
 <body>
@@ -261,57 +352,112 @@
     <header>
       <span class="eyebrow">Powered by Groq</span>
       <h1>Ask the <span>Sky</span></h1>
-      <p class="tagline">Type a question below, and let AI find the answer.</p>
+      <p class="tagline">Pick a level, type anything confusing, and let AI explain it simply.</p>
     </header>
 
     <div class="card">
-      <textarea id="userInput" placeholder="Ask me anything..."></textarea>
+      <span class="level-label">Explain it to me like I'm a...</span>
+      <div class="level-selector" role="radiogroup" aria-label="Explanation complexity level">
+        <div class="level-option" data-level="child" role="radio" aria-checked="false" tabindex="0">
+          <span class="level-icon">🧸</span>
+          <span class="level-text">5-Year-Old</span>
+        </div>
+        <div class="level-option active" data-level="teen" role="radio" aria-checked="true" tabindex="0">
+          <span class="level-icon">🎒</span>
+          <span class="level-text">Teenager</span>
+        </div>
+        <div class="level-option" data-level="college" role="radio" aria-checked="false" tabindex="0">
+          <span class="level-icon">🎓</span>
+          <span class="level-text">College Student</span>
+        </div>
+      </div>
+
+      <textarea id="topicInput" placeholder="What do you want explained? e.g. blockchain, gravity, photosynthesis..."></textarea>
+
+      <p class="examples">
+        Try:
+        <button type="button" class="example-btn">blockchain</button> ·
+        <button type="button" class="example-btn">gravity</button> ·
+        <button type="button" class="example-btn">inflation</button>
+      </p>
+
       <div class="row">
-        <button id="askButton">
-          <span id="btnText">Ask AI</span>
+        <button class="primary" id="explainButton">
+          <span id="btnText">Explain It</span>
         </button>
       </div>
     </div>
 
     <div class="card">
-      <span class="response-label">Response</span>
+      <span class="response-label">Explanation</span>
       <div id="responseArea" class="empty-state">
-        Your answer will appear here once you ask something.
+        Your simple explanation will appear here once you ask something.
       </div>
     </div>
 
-    <footer>Built with Express, Groq, and a clear sky.</footer>
+    <footer>Built with Express, Groq, and a clear sky — by Maisha Fariha</footer>
   </div>
 
 <script>
   // Production backend URL (deployed on Railway).
   const BACKEND_URL = "https://my-ai-project-production-7a69.up.railway.app";
 
-  const askButton = document.getElementById('askButton');
+  const explainButton = document.getElementById('explainButton');
   const btnText = document.getElementById('btnText');
-  const userInput = document.getElementById('userInput');
+  const topicInput = document.getElementById('topicInput');
   const responseArea = document.getElementById('responseArea');
+  const levelOptions = document.querySelectorAll('.level-option');
+  const exampleButtons = document.querySelectorAll('.example-btn');
 
-  async function askAI() {
-    const text = userInput.value.trim();
+  let selectedLevel = 'teen';
 
-    if (!text) {
+  function setActiveLevel(option) {
+    levelOptions.forEach(opt => {
+      opt.classList.remove('active');
+      opt.setAttribute('aria-checked', 'false');
+    });
+    option.classList.add('active');
+    option.setAttribute('aria-checked', 'true');
+    selectedLevel = option.dataset.level;
+  }
+
+  levelOptions.forEach(option => {
+    option.addEventListener('click', () => setActiveLevel(option));
+    option.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setActiveLevel(option);
+      }
+    });
+  });
+
+  exampleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      topicInput.value = btn.textContent;
+      topicInput.focus();
+    });
+  });
+
+  async function explainTopic() {
+    const topic = topicInput.value.trim();
+
+    if (!topic) {
       responseArea.className = 'error-state';
-      responseArea.textContent = 'Please type a question first.';
+      responseArea.textContent = 'Please type a topic first.';
       return;
     }
 
     // Set loading state
-    askButton.disabled = true;
+    explainButton.disabled = true;
     btnText.innerHTML = '<span class="spinner"></span> Thinking...';
     responseArea.className = 'empty-state';
     responseArea.textContent = 'Waiting for the AI to respond...';
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/analyze`, {
+      const res = await fetch(`${BACKEND_URL}/api/explain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userText: text })
+        body: JSON.stringify({ topic: topic, level: selectedLevel })
       });
 
       const data = await res.json();
@@ -327,16 +473,16 @@
       responseArea.className = 'error-state';
       responseArea.textContent = 'Error: ' + err.message + ' (Is your backend server running?)';
     } finally {
-      askButton.disabled = false;
-      btnText.textContent = 'Ask AI';
+      explainButton.disabled = false;
+      btnText.textContent = 'Explain It';
     }
   }
 
-  askButton.addEventListener('click', askAI);
+  explainButton.addEventListener('click', explainTopic);
 
-  userInput.addEventListener('keydown', (e) => {
+  topicInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      askAI();
+      explainTopic();
     }
   });
 </script>
