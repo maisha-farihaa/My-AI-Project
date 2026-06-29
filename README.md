@@ -1,12 +1,21 @@
-# My AI Project — Ask the Sky
+# Ask the Sky
 
-A simple full-stack AI web app where users can type a question and get an instant answer powered by Groq's AI models. Built with Express.js on the backend and a clean, sky-blue themed frontend.
+A full-stack AI web app where users pick an explanation level — 5-Year-Old, Teenager, or College Student — type any topic, and get an instant, level-appropriate explanation powered by Groq's AI models. Built with Express.js on the backend and a clean, sky-blue themed frontend.
 
 ## Live Demo
 
-**[https://my-ai-project-4s137w821-maisha-fariha-s-projects.vercel.app](https://my-ai-project-4s137w821-maisha-fariha-s-projects.vercel.app)**
+**[https://my-ai-project-one-alpha.vercel.app](https://my-ai-project-one-alpha.vercel.app)**
 
-Try it out — type any question and the AI will respond in real time.
+Pick a level, type a topic (try: blockchain, gravity, inflation), and let the AI explain it in a way that matches your selection.
+
+## Features
+
+- **Level-based explanations** — choose how simple or detailed the answer should be:
+  - 5-Year-Old: simple words, fun analogies, no jargon
+  - Teenager: everyday language with relatable examples
+  - College Student: proper terminology with more depth
+- **One-click examples** — quick-start buttons for common topics
+- **Clean, responsive UI** with a sky-blue theme and subtle animation
 
 ## Tech Stack
 
@@ -26,7 +35,7 @@ Backend (Express on Railway)
 Groq AI API
         |
         v
-Response returned to user
+Level-appropriate explanation returned to user
 ```
 
 ## Project Structure
@@ -34,21 +43,21 @@ Response returned to user
 ```
 my-ai-project/
 ├── backend/
-│   ├── server.js       # Express server with the /api/analyze endpoint
+│   ├── server.js       # Express server with the /api/explain endpoint
 │   ├── package.json
 │   └── .env             # Environment variables (not committed to GitHub)
 ├── frontend/
-│   └── index.html       # Single-page UI that calls the backend API
+│   └── index.html       # Single-page UI with the level selector and explanation flow
 └── README.md
 ```
 
 ## How It Works
 
-1. The user types a question into the input box on the frontend.
-2. The frontend sends a POST request to the backend's `/api/analyze` endpoint.
-3. The backend forwards the question to the Groq API.
-4. Groq returns an AI-generated response.
-5. The backend sends that response back to the frontend, where it's displayed to the user.
+1. The user selects a complexity level (5-Year-Old, Teenager, or College Student) and types a topic.
+2. The frontend sends a POST request to the backend's `/api/explain` endpoint with the topic and selected level.
+3. The backend builds a level-specific prompt and forwards it to the Groq API.
+4. Groq returns an AI-generated explanation tailored to that level.
+5. The backend sends the explanation back to the frontend, where it's displayed to the user.
 
 ## Running Locally
 
@@ -80,3 +89,7 @@ Open `frontend/index.html` directly in a browser, or serve it with any static fi
 
 - The `.env` file is excluded from version control via `.gitignore` to keep the API key secure.
 - CORS is enabled on the backend to allow requests from the deployed frontend.
+
+## Author
+
+Built by **Maisha Fariha**.
